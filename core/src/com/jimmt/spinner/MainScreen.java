@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -33,7 +34,7 @@ public class MainScreen implements Screen {
 
         batch = new SpriteBatch();
         world = new World(new Vector2(0, 0), false);
-        Texture spinnerTex = new Texture(Gdx.files.internal("spinner.jpg"));
+        Texture spinnerTex = new Texture(Gdx.files.internal("spinner.png"));
         spinnerTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         spinner = new SpinnerSprite(spinnerTex, world);
         spinner.setPosition(camera.viewportWidth / 2f * Constants.PIX_TO_BOX
@@ -46,7 +47,7 @@ public class MainScreen implements Screen {
         spinnerInput = new SpinnerInput(spinner, camera);
         Gdx.input.setInputProcessor(spinnerInput);
 
-        sr = new ShapeRenderer();
+        sr = new ShapeRenderer();    
     }
 
     @Override
@@ -55,7 +56,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1.0f);
+        Gdx.gl.glClearColor(0, 0, 0, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.setProjectionMatrix(camera.combined);
@@ -66,17 +67,17 @@ public class MainScreen implements Screen {
         batch.end();
 
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        renderer.render(world, camera.combined);
+//        renderer.render(world, camera.combined);
 
         // if (spinnerInput.angle1 != null) {
-         sr.setProjectionMatrix(camera.combined);
-         sr.setColor(Color.RED);
-         sr.begin(ShapeType.Line);
-         sr.line(spinner.getX() + spinner.getOriginX(), spinner.getY() +
-         spinner.getOriginY(), spinnerInput.worldLast.x, spinnerInput.worldLast.y);
-         sr.line(spinner.getX() + spinner.getOriginX(), spinner.getY() +
-                 spinner.getOriginY(), spinnerInput.worldCurrent.x, spinnerInput.worldCurrent.y);
-         sr.end();
+//         sr.setProjectionMatrix(camera.combined);
+//         sr.setColor(Color.RED);
+//         sr.begin(ShapeType.Line);
+//         sr.line(spinner.getX() + spinner.getOriginX(), spinner.getY() +
+//         spinner.getOriginY(), spinnerInput.worldLast.x, spinnerInput.worldLast.y);
+//         sr.line(spinner.getX() + spinner.getOriginX(), spinner.getY() +
+//                 spinner.getOriginY(), spinnerInput.worldCurrent.x, spinnerInput.worldCurrent.y);
+//         sr.end();
         // sr.line(spinner.getX() + spinner.getOriginX(), spinner.getY() +
         // spinner.getOriginY(),
         // spinnerInput.lastAngle.x, spinnerInput.lastAngle.y);

@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 
 public class SpinnerSprite extends Sprite {
 	private ArrayList<Body> circles;
+    private TripleEffect effect;
 	private Body anchor;
 
 	private float scale = 1 / 2f, initialRotOffset;
@@ -41,6 +42,8 @@ public class SpinnerSprite extends Sprite {
 		setSize(getWidth() * Constants.PIX_TO_BOX * scale, getHeight() * Constants.PIX_TO_BOX * scale);
 		setOrigin(getWidth() / 2f, getHeight() / 2f);
 		initialRotOffset = anchor.getPosition().sub(circles.get(0).getPosition()).angle();
+        
+        effect = new TripleEffect(circles, anchor);
 	}
 
 	public void spin(float angle) {
@@ -108,6 +111,7 @@ public class SpinnerSprite extends Sprite {
 		super.draw(batch);
 		Vector2 v2 = circles.get(0).getPosition().sub(anchor.getPosition());
 		this.setRotation(initialRotOffset + v2.angle());
+		effect.draw(batch);
 		// this.setPosition(body.getPosition().x - getWidth() *
 		// Constants.PIX_TO_BOX / 2f,
 		// body.getPosition().y - getHeight() * Constants.PIX_TO_BOX / 2f);
