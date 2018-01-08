@@ -2,16 +2,16 @@ Untitled
 - Delay -
 active: false
 - Duration - 
-lowMin: 3000.0
-lowMax: 3000.0
+lowMin: 0.0
+lowMax: 0.0
 - Count - 
 min: 0
-max: 10000
+max: 0
 - Emission - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 500.0
-highMax: 500.0
+highMin: 0.0
+highMax: 0.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -71,8 +71,8 @@ timeline0: 0.0
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 200.0
-highMax: 200.0
+highMin: 0.0
+highMax: 0.0
 relative: false
 scalingCount: 3
 scaling0: 1.0
@@ -140,4 +140,4 @@ additive: true
 behind: false
 premultipliedAlpha: false
 - Image Path -
-particle.png
+/C:/Users/Austin/repos/Spinner/desktop/particle.png

@@ -2,6 +2,7 @@ package com.jimmt.spinner;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 public class SpinnerSprite extends Sprite {
 	private ArrayList<Body> circles;
     private TripleEffect effect;
+    private Sprite anchorSprite;
 	private Body anchor;
 
 	private float scale = 1 / 2f, initialRotOffset;
@@ -40,7 +42,7 @@ public class SpinnerSprite extends Sprite {
 		connectCircles(1, 2, world);
 
 		setSize(getWidth() * Constants.PIX_TO_BOX * scale, getHeight() * Constants.PIX_TO_BOX * scale);
-		setOrigin(getWidth() / 2f, getHeight() / 2f);
+		setOrigin(497 / 200f, (1080 - 547) / 200f);
 		initialRotOffset = anchor.getPosition().sub(circles.get(0).getPosition()).angle();
         
         effect = new TripleEffect(circles, anchor);
@@ -68,6 +70,10 @@ public class SpinnerSprite extends Sprite {
 		circle.setRadius(150f * scale * Constants.PIX_TO_BOX);
 		anchorFD.shape = circle;
 		anchor.createFixture(anchorFD);
+		
+		anchorSprite = new Sprite(new Texture(Gdx.files.internal("anchor.png")));
+		anchorSprite.setSize(anchorSprite.getWidth() * Constants.PIX_TO_BOX * scale, anchorSprite.getHeight() * Constants.PIX_TO_BOX * scale);
+
 	}
 
 	private Body initCircle(World world, Vector2 position) {
@@ -109,6 +115,8 @@ public class SpinnerSprite extends Sprite {
 	@Override
 	public void draw(Batch batch) {
 		super.draw(batch);
+	      anchorSprite.setPosition(this.getX(), this.getY());
+		anchorSprite.draw(batch);
 		Vector2 v2 = circles.get(0).getPosition().sub(anchor.getPosition());
 		this.setRotation(initialRotOffset + v2.angle());
 		effect.draw(batch);

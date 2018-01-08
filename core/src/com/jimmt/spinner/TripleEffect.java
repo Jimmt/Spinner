@@ -30,13 +30,11 @@ public class TripleEffect {
             this.hiMax = hiMax;
         }
     }
-
-    public TripleEffect(ArrayList<Body> circles, Body anchor) {
-        rotData = new ArrayList<ArrayList<RotationData>>();
-
+    
+    public void loadEffects(String path){
         for (int i = 0; i < 3; i++) {
             effects[i] = new ParticleEffect();
-            effects[i].load(Gdx.files.internal("wide.p"),
+            effects[i].load(Gdx.files.internal(path),
                             Gdx.files.internal(""));
             effects[i].scaleEffect(Constants.PIX_TO_BOX);
             effects[i].start();
@@ -52,6 +50,12 @@ public class TripleEffect {
                 list.add(new RotationData(loMin, loMax, hiMin, hiMax));
             }
         }
+    }
+
+    public TripleEffect(ArrayList<Body> circles, Body anchor) {
+        rotData = new ArrayList<ArrayList<RotationData>>();
+
+        loadEffects("empty.p");
 
         this.circles = circles;
         this.anchor = anchor;
