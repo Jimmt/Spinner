@@ -47,6 +47,10 @@ public class SpinnerSprite extends Sprite {
         
         effect = new TripleEffect(circles, anchor);
 	}
+	
+	public TripleEffect getTripleEffect(){
+	    return effect;
+	}
 
 	public void spin(float angle) {
 //		float magnitude = 0;

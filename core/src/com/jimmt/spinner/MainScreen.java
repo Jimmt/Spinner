@@ -1,6 +1,7 @@
 package com.jimmt.spinner;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,35 +14,38 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 
 public class MainScreen implements Screen {
-    private OrthographicCamera camera, uiCamera;
+    private OrthographicCamera camera;
+    private Stage uiStage;
     private World world;
     private SpriteBatch batch;
-    private SpriteBatch uiBatch;
     private SpinnerSprite spinner;
     private Box2DDebugRenderer renderer;
     private SpinnerInput spinnerInput;
     private ShapeRenderer sr;
     private ScalingViewport viewport, uiViewport;
     private ImageButton effectsButton;
+    private InputMultiplexer multiplexer;
+    private EffectMenu menu;
 
     public MainScreen() {
         viewport = new ScalingViewport(Scaling.fit, 600 * Constants.PIX_TO_BOX,
                                        960 * Constants.PIX_TO_BOX);
-        camera = (OrthographicCamera) viewport.getCamera();
         uiViewport = new ScalingViewport(Scaling.fit, 600, 960);
-        uiCamera = (OrthographicCamera) uiViewport.getCamera();
-        uiCamera.translate(uiViewport.getWorldWidth() / 2,
-                           uiViewport.getWorldHeight() / 2);
+        camera = (OrthographicCamera) viewport.getCamera();
 
+        uiStage = new Stage(uiViewport);
         batch = new SpriteBatch();
-        uiBatch = new SpriteBatch();
         world = new World(new Vector2(0, 0), false);
         Texture spinnerTex = new Texture(Gdx.files.internal("spinner.png"));
         spinnerTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -54,15 +58,42 @@ public class MainScreen implements Screen {
         renderer = new Box2DDebugRenderer();
 
         spinnerInput = new SpinnerInput(spinner, camera);
-        Gdx.input.setInputProcessor(spinnerInput);
 
         sr = new ShapeRenderer();
+
+        setupMenu();
 
         ImageButtonStyle style = new ImageButtonStyle();
         Image img = new Image(new Texture(Gdx.files.internal("button.png")));
         img.scaleBy(Constants.PIX_TO_BOX);
         style.up = img.getDrawable();
         effectsButton = new ImageButton(style);
+        uiStage.addActor(effectsButton);
+        effectsButton.setPosition(uiStage.getWidth() - 64 - 10,
+                                  uiStage.getHeight() - 64 - 32);
+        addListeners();
+
+        multiplexer = new InputMultiplexer(uiStage, spinnerInput);
+        Gdx.input.setInputProcessor(multiplexer);
+
+        // uiStage.addActor(new Test(uiViewport.getWorldWidth(),
+        // uiViewport.getWorldHeight(), spinner));
+    }
+
+    private void setupMenu() {
+        menu = new EffectMenu(uiViewport.getWorldWidth(),
+                              uiViewport.getWorldHeight(), spinner);
+        menu.setVisible(false);
+        uiStage.addActor(menu);
+    }
+
+    private void addListeners() {
+        effectsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                menu.setVisible(!menu.isVisible());
+            }
+        });
     }
 
     @Override
@@ -75,31 +106,32 @@ public class MainScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.setProjectionMatrix(camera.combined);
-        uiBatch.setProjectionMatrix(uiCamera.combined);
+        uiStage.act(delta);
         world.step(1 / 60f, 3, 3);
         camera.update();
-        uiCamera.update();
         batch.begin();
         spinner.draw(batch);
         batch.end();
+        uiStage.draw();
 
-        uiBatch.begin();
-        float margin = 0f;
-        effectsButton.setPosition(uiViewport.getWorldWidth() - 64 - 10, uiViewport.getWorldHeight() - 64-32);
-        effectsButton.draw(uiBatch, 1.0f);
-        uiBatch.end();
+        // uiBatch.begin();
+        // float margin = 0f;
+        // effectsButton.setPosition(uiViewport.getWorldWidth() - 64 - 10,
+        // uiViewport.getWorldHeight() - 64 - 32);
+        // effectsButton.draw(uiBatch, 1.0f);
+        // uiBatch.end();
 
-        sr.setProjectionMatrix(uiCamera.combined);
-        sr.setColor(Color.RED);
-        sr.begin(ShapeType.Line);
-        sr.circle(uiViewport.getWorldWidth(), uiViewport.getWorldHeight(), 50);
-//        sr.setColor(Color.BLUE);
-//        sr.line(0, 0, uiViewport.getScreenWidth(),
-//                uiViewport.getScreenHeight());
-        sr.end();
-
+        // sr.setProjectionMatrix(uiStage.getCamera().combined);
+        // sr.setColor(Color.RED);
+        // sr.begin(ShapeType.Line);
+        // menu.setPosition(200, 200);
+        // sr.circle(menu.bg.getX(), menu.bg.getY(), 100);
+        // sr.circle(menu.getX(), menu.getY(), 100);
+        // sr.end();
+        // sr.circle(uiViewport.getWorldWidth(), uiViewport.getWorldHeight(),
+        // 50);
+        // sr.end();
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        uiViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         // renderer.render(world, camera.combined);
 
         // if (spinnerInput.angle1 != null) {
@@ -126,7 +158,6 @@ public class MainScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
-        uiViewport.update(width, height);
     }
 
     @Override

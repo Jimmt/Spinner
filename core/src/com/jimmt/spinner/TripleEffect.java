@@ -55,7 +55,7 @@ public class TripleEffect {
     public TripleEffect(ArrayList<Body> circles, Body anchor) {
         rotData = new ArrayList<ArrayList<RotationData>>();
 
-        loadEffects("empty.p");
+        loadEffects("fire.p");
 
         this.circles = circles;
         this.anchor = anchor;
